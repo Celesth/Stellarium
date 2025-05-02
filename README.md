@@ -5,4 +5,4 @@ Yo this project may contains harmful, trollin, NSFW type shi.
 [H*ntai Webhook Sender](discord/NSFW-webhook.lua)
 
 ```lua
-loadstring(game:HttpsGet("https://raw.githubusercontent.com/Celesth/Stellarium/refs/heads/main/discord/NSFW-webhook.lua"))
+loadstring(game:HttpsGet("https://raw.githubusercontent.com/Celesth/Stellarium/refs/heads/main/discord/NSFW-webhook.lua"))()
