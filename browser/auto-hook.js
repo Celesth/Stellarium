@@ -1,3 +1,6 @@
+// [Save This As A Custom Js Runner In A Browser Or Extension To Use./
+
+
 (async function sendWebhook() {
   const webhookUrl = "discord Webhook here.";
 
