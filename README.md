@@ -11,5 +11,6 @@ loadstring(game:HttpsGet("https://raw.githubusercontent.com/Celesth/Stellarium/r
 
 # 12/5/2025
 [Auto-Hook](browser/auto-hook.js)
+- ⚠️ As Late Of Now, You Are No Longer Able To Get The Thumbnails Of Video Due To IDK CORS? maybe 
 - allows to gets links for icorn.tv and r-34video.com, i made this because to make my collection;)
 - Smol Update, Now Shows Notification if webhook has sent or not
