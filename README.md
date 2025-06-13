@@ -6,7 +6,7 @@ Yo this project may contains harmful, trollin, NSFW type shi.
 
 
 # 2/5/2025
-[H*ntai Webhook Sender](discord/NSFW-webhook.lua) 
+[H*ntai Webhook](roblox/discord/NSFW-Webhook.luau) 
 - currently down
 
 ```lua
