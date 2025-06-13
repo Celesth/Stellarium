@@ -10,7 +10,7 @@ Yo this project may contains harmful, trollin, NSFW type shi.
 - currently down
 
 ```lua
-loadstring(game:HttpsGet("https://raw.githubusercontent.com/Celesth/Stellarium/refs/heads/main/discord/NSFW-webhook.lua"))()
+loadstring(game:HttpsGet("https://raw.githubusercontent.com/Celesth/Stellarium/refs/heads/main/roblox/discord/NSFW-Webhook.luau"))()
 ```
 
 # 12/5/2025
