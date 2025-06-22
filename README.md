@@ -4,7 +4,7 @@ Yo this project may contains harmful, trollin, NSFW type shi.
 # ImgViewer [22/6/25]
 - Status: 🟢
 
-[showcase](assets/Screenshot_2025-06-22-16-38-31-896_com.roblox.client.png)
+[showcase](https://raw.githubusercontent.com/Celesth/Stellarium/refs/heads/main/assets/Screenshot_2025-06-22-16-38-31-896_com.roblox.client.png)
 
 - Basically An Texture/Decal Viewer Inside Roblox. Only Works With Roblox Assets
 ```lua
