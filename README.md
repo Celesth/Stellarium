@@ -14,6 +14,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/Celesth/Stellarium/ma
 
 # Stat Hooker [I forgor date]
 - Status: 🟢
+![showcase-2](https://raw.githubusercontent.com/Celesth/Stellarium/main/assets/Screenshot_2025-06-22-18-03-59-933_app.revenge.png)
 ```lua
 _G.WebhookUrl = "Discord Webhook Url"
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Celesth/Stellarium/main/roblox/SolsRNG/stathook.luau"))()
