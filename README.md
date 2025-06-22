@@ -22,6 +22,11 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/Celesth/Stellarium/ma
 
 # 2/5/2025 [HGifs Sender Rblx]
 - Status: 🟢
+> [!CAUTION]
+> I Do Know About The Bug Where The Toggle/Auto-send isn't working properly.
+> I don't intent to fix it because the fact that using rblx to spam Webhook won't work properly because the ping in-game is the actual ping your going to send.
+> Thus making it longer by 3 or more time
+> Please Use Any Other Script (.py/.js.cpp) version of webhook spammer.
 ![showcase-3](https://raw.githubusercontent.com/Celesth/Stellarium/refs/heads/main/assets/Screenshot_2025-06-22-18-17-54-778_com.roblox.client.png)
 ```lua
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Celesth/Stellarium/main/roblox/discord/NSFW-Webhook.luau"))()
