@@ -1,25 +1,25 @@
 # Stellarium
 Yo this project may contains harmful, trollin, NSFW type shi.
 
-# ImgViewer [ 22/6/25 ]
+# ImgViewer [22/6/25]
 - Status: 🟢
 - Basically An Texture/Decal Viewer Inside Roblox. Only Works With Roblox Assets
 ```lua
-
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Celesth/Stellarium/main/roblox/Universal/ImgViewer.luau"))()
 ```
 
 
-# Stat Hooker [ I forgor date]
+# Stat Hooker [I forgor date]
 - Status: 🟢
 ```lua
 _G.WebhookUrl = "Discord Webhook Url"
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Celesth/Stellarium/refs/heads/main/roblox/SolsRNG/stathook.luau"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Celesth/Stellarium/main/roblox/SolsRNG/stathook.luau"))()
 ```
 
-# 2/5/2025 [Hentai Webhook Sender Rblx]
+# 2/5/2025 [HGifs Sender Rblx]
 - Status: 🟢
 ```lua
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Celesth/Stellarium/refs/heads/main/roblox/discord/NSFW-Webhook.luau"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Celesth/Stellarium/main/roblox/discord/NSFW-Webhook.luau"))()
 ```
 
 # 12/5/2025
