@@ -22,6 +22,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/Celesth/Stellarium/ma
 
 # 2/5/2025 [HGifs Sender Rblx]
 - Status: 🟢
+![showcase-3](https://raw.githubusercontent.com/Celesth/Stellarium/refs/heads/main/assets/Screenshot_2025-06-22-18-17-54-778_com.roblox.client.png)
 ```lua
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Celesth/Stellarium/main/roblox/discord/NSFW-Webhook.luau"))()
 ```
