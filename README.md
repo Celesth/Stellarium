@@ -4,7 +4,7 @@ Yo this project may contains harmful, trollin, NSFW type shi.
 # Soon! [Same Concept As ImgViewer
 > But Better And Uses External/Third-party Website Images.
 > Req: Must Be Raw Image.
-![teaser](https://raw.githubusercontent.com/Celesth/Stellarium/refs/heads/main/assets/Screenshot_2025-06-23-21-10-01-869_com.roblox.client.png)
+![teaser](https://raw.githubusercontent.com/Celesth/Stellarium/refs/heads/main/assets/Screenshot_2025-06-23-21-30-25-854_com.roblox.client.jpg)
 
 
 # ImgViewer [22/6/25]
