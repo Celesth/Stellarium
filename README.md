@@ -6,7 +6,7 @@ Yo this project may contains harmful, trollin, NSFW type shi.
 
 > Req: Must Be Raw Image.
 ![teaser](https://raw.githubusercontent.com/Celesth/Stellarium/main/assets/Screenshot_2025-06-23-21-30-25-854_com.roblox.client.jpg)
-```py
+```lua
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Celesth/Stellarium/main/roblox/Universal/DL2IMG/loader.luau"))()
 ```
 
