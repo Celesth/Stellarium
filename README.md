@@ -1,12 +1,14 @@
 # Stellarium
 Yo this project may contains harmful, trollin, NSFW type shi.
 
-# Soon! [Same Concept As ImgViewer
+# DL2IMG [24/6/2025]
 > But Better And Uses External/Third-party Website Images.
 
 > Req: Must Be Raw Image.
 ![teaser](https://raw.githubusercontent.com/Celesth/Stellarium/main/assets/Screenshot_2025-06-23-21-30-25-854_com.roblox.client.jpg)
-- planing to make it as a library with more features.
+```py
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Celesth/Stellarium/main/roblox/Universal/DL2IMG/loader.luau"))()
+```
 
 # ImgViewer [22/6/25]
 - Status: 🟢
