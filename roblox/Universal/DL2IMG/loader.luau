@@ -1,1 +1,6 @@
-
+task.wait(2)
+print("loading")
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Celesth/Stellarium/main/roblox/Universal/DL2IMG/utils.luau"))()
+task.wait(9)
+print("loaded")
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Celesth/Stellarium/main/roblox/Universal/DL2IMG/DL2IMG.luau"))()
