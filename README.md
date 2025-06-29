@@ -27,6 +27,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/Celesth/Stellarium/ma
 ```lua
 _G.WebhookUrl = "Discord Webhook Url"
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Celesth/Stellarium/main/roblox/SolsRNG/stathook.luau"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Celesth/Stellarium/main/roblox/Universal/PlayerUtils.luau"))()
 ```
 
 # 2/5/2025 [HGifs Sender Rblx]
