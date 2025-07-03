@@ -5,6 +5,7 @@ Yo this project may contains harmful, trollin, NSFW type shi.
 > But Better And Uses External/Third-party Website Images.
 
 > Req: Must Be Raw Image.
+> Shouldn't Be Above 1080p (Library limitations)
 ![teaser](https://raw.githubusercontent.com/Celesth/Stellarium/main/assets/Screenshot_2025-06-23-21-30-25-854_com.roblox.client.jpg)
 ```lua
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Celesth/Stellarium/main/roblox/Universal/DL2IMG/loader.luau"))()
