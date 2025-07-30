@@ -2,10 +2,10 @@
 Yo this project may contains harmful, trollin, NSFW type shi.
 
 # Discord RPC (Self-bot) [30/7/2025]
-> Allows To Customize Rich Presence Fully.
-> Just Ask ChatGPT About How to Set this up 😭🙏
+- Allows To Customize Rich Presence Fully.
+- Just Ask ChatGPT About How to Set this up 😭🙏
 [source](discord/discordRPC.js)
-> make sure to change the token to your account token 
+- make sure to change the token to your account token 
 
 # DL2IMG [24/6/2025]
 > But Better And Uses External/Third-party Website Images.
