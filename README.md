@@ -5,7 +5,8 @@ Yo this project may contains harmful, trollin, NSFW type shi.
 - Allows To Customize Rich Presence Fully.
 - Just Ask ChatGPT About How to Set this up 😭🙏
 [source](discord/discordRPC.js)
-- make sure to change the token to your account token 
+- make sure to change the token to your account token
+![preview](assets/Screenshot_2025-08-03-09-07-03-731-edit_app.revenge.jpg)
 
 # DL2IMG [24/6/2025]
 > But Better And Uses External/Third-party Website Images.
