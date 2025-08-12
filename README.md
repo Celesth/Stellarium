@@ -1,6 +1,14 @@
 # Stellarium
 Yo this project may contains harmful, trollin, NSFW type shi.
 
+# Blob Logger Etc. [11/8/2025]
+- Allow Embedded Video Src Link To Be Extracted.
+- Uses XHR
+- requirement (violentmonkey)/(tampermonkey)
+![preview](assets/Screenshot_2025-08-12-06-53-43-368_app.revenge.png)
+
+- [source code](browser/BlobLogger.js)
+
 # Discord RPC (Self-bot) [30/7/2025]
 - Allows To Customize Rich Presence Fully.
 - Just Ask ChatGPT About How to Set this up 😭🙏
