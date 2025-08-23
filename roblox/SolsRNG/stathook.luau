@@ -1,4 +1,4 @@
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Celesth/Stellarium/main/roblox/Utility/Protected_5284737213746281.lua.txt"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Celesth/Stellarium/main/roblox/Utility/Protected_1652600242814224.lua.txt"))()
 task.wait(1)
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Celesth/Stellarium/main/roblox/SolsRNG/source.luau"))()
 task.wait(1)
