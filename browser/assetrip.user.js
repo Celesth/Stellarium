@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         AssetRip
 // @namespace    https://github.com/Celesth
-// @version      1.0.0
-// @description  In-page asset ripper GUI — images, video, gif, yt-dlp/ffmpeg commands, Discord debug
+// @version      1.1.0
+// @description  In-page asset ripper GUI — images, video, gif, yt-dlp/ffmpeg commands, source inspector, Discord debug
 // @author       Celesth
 // @match        *://*/*
 // @grant        GM_addStyle
@@ -30,19 +30,19 @@
       @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap');
 
       :root {
-        --ar-bg:         #ffffff;
-        --ar-bg2:        #f4f4f4;
-        --ar-bg3:        #e8e8e8;
-        --ar-border:     #d0d0d0;
-        --ar-border2:    #b8b8b8;
-        --ar-fg:         #0a0a0a;
-        --ar-fg2:        #444444;
-        --ar-fg3:        #888888;
-        --ar-accent:     #0a0a0a;
-        --ar-accent-inv: #ffffff;
-        --ar-red:        #c0392b;
-        --ar-green:      #1a7a3a;
-        --ar-shadow:     0 4px 24px rgba(0,0,0,0.13), 0 1px 4px rgba(0,0,0,0.08);
+        --ar-bg:         #0c0c0c;
+        --ar-bg2:        #141414;
+        --ar-bg3:        #1e1e1e;
+        --ar-border:     #2a2a2a;
+        --ar-border2:    #383838;
+        --ar-fg:         #f0f0f0;
+        --ar-fg2:        #aaaaaa;
+        --ar-fg3:        #555555;
+        --ar-accent:     #f0f0f0;
+        --ar-accent-inv: #0c0c0c;
+        --ar-red:        #e05555;
+        --ar-green:      #55aa77;
+        --ar-shadow:     0 4px 32px rgba(0,0,0,0.6), 0 1px 6px rgba(0,0,0,0.4);
         --ar-radius:     6px;
         --ar-font:       'IBM Plex Mono', monospace;
         --ar-sz:         13px;
@@ -87,14 +87,13 @@
       #ar-titlebar:active { cursor: grabbing; }
       #ar-titlebar-title { font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; flex: 1; }
       .ar-tbtn {
-        background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18);
-        color: rgba(255,255,255,0.8); border-radius: 3px; cursor: pointer;
+        background: rgba(0,0,0,0.15); border: 1px solid rgba(0,0,0,0.25);
+        color: rgba(0,0,0,0.75); border-radius: 3px; cursor: pointer;
         font-size: 10px; font-family: var(--ar-font); padding: 2px 7px;
-        transition: background 0.12s;
-        -webkit-tap-highlight-color: transparent;
+        transition: background 0.12s; -webkit-tap-highlight-color: transparent;
       }
-      .ar-tbtn:hover { background: rgba(255,255,255,0.22); }
-      .ar-tbtn.active { background: rgba(255,255,255,0.9); color: var(--ar-fg); }
+      .ar-tbtn:hover { background: rgba(0,0,0,0.28); }
+      .ar-tbtn.active { background: var(--ar-bg); color: var(--ar-fg); border-color: var(--ar-bg); }
 
       #ar-toolbar {
         display: flex; align-items: center; gap: 4px; flex-wrap: wrap;
@@ -106,8 +105,7 @@
         letter-spacing: 0.06em; text-transform: uppercase;
         padding: 3px 9px; border-radius: 3px; cursor: pointer;
         border: 1px solid var(--ar-border2); background: var(--ar-bg);
-        color: var(--ar-fg2); transition: all 0.1s;
-        -webkit-tap-highlight-color: transparent;
+        color: var(--ar-fg2); transition: all 0.1s; -webkit-tap-highlight-color: transparent;
       }
       .ar-filter-btn:hover { border-color: var(--ar-fg); color: var(--ar-fg); }
       .ar-filter-btn.active { background: var(--ar-fg); color: var(--ar-accent-inv); border-color: var(--ar-fg); }
@@ -117,8 +115,7 @@
         font-family: var(--ar-font); font-size: 11px;
         padding: 3px 8px; border-radius: 3px; cursor: pointer;
         border: 1px solid var(--ar-border2); background: var(--ar-bg);
-        color: var(--ar-fg2); transition: all 0.1s;
-        -webkit-tap-highlight-color: transparent;
+        color: var(--ar-fg2); transition: all 0.1s; -webkit-tap-highlight-color: transparent;
       }
       .ar-icon-btn:hover { border-color: var(--ar-fg); color: var(--ar-fg); }
       .ar-icon-btn.danger:hover { border-color: var(--ar-red); color: var(--ar-red); }
@@ -130,9 +127,7 @@
         display: flex; align-items: center; gap: 10px;
       }
       #ar-stats span { display: flex; align-items: center; gap: 3px; }
-      #ar-scan-bar {
-        margin-left: auto; height: 3px; width: 80px; background: var(--ar-bg3); border-radius: 2px; overflow: hidden; display: none;
-      }
+      #ar-scan-bar { margin-left: auto; height: 3px; width: 80px; background: var(--ar-bg3); border-radius: 2px; overflow: hidden; display: none; }
       #ar-scan-fill { height: 100%; background: var(--ar-fg); width: 0%; transition: width 0.3s; }
 
       #ar-grid {
@@ -160,10 +155,10 @@
         border: 1px solid var(--ar-border); border-radius: 4px;
         overflow: hidden; cursor: pointer; position: relative;
         background: var(--ar-bg2);
-        transition: border-color 0.12s, box-shadow 0.12s;
-        -webkit-tap-highlight-color: transparent;
+        transition: border-color 0.12s, box-shadow 0.12s; -webkit-tap-highlight-color: transparent;
       }
-      .ar-card:hover { border-color: var(--ar-fg); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+      .ar-card:hover { border-color: var(--ar-border2); }
+      .ar-card:hover .ar-card-actions { opacity: 1; }
       .ar-card.selected { border-color: var(--ar-fg); box-shadow: 0 0 0 2px var(--ar-fg); }
 
       .ar-card-media {
@@ -183,23 +178,39 @@
         position: absolute; top: 4px; left: 4px;
         font-size: 8px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
         padding: 1px 5px; border-radius: 2px;
-        background: rgba(10,10,10,0.78); color: #fff;
+        background: rgba(12,12,12,0.85); color: var(--ar-fg);
       }
 
       .ar-card-check {
         position: absolute; top: 4px; right: 4px;
         width: 16px; height: 16px; border-radius: 2px;
-        background: rgba(255,255,255,0.9); border: 1px solid var(--ar-border2);
+        background: rgba(12,12,12,0.7); border: 1px solid var(--ar-border2);
         display: flex; align-items: center; justify-content: center;
-        font-size: 10px; transition: background 0.1s;
+        font-size: 10px; color: var(--ar-fg2); transition: background 0.1s;
       }
-      .ar-card.selected .ar-card-check { background: var(--ar-fg); color: #fff; }
+      .ar-card.selected .ar-card-check { background: var(--ar-fg); color: var(--ar-accent-inv); }
+
+      .ar-card-actions {
+        position: absolute; bottom: 0; left: 0; right: 0;
+        display: flex; gap: 2px; padding: 4px;
+        background: linear-gradient(to top, rgba(12,12,12,0.92) 0%, transparent 100%);
+        opacity: 0; transition: opacity 0.15s;
+      }
+      .ar-card-action-btn {
+        flex: 1; font-family: var(--ar-font); font-size: 8px; font-weight: 600;
+        letter-spacing: 0.06em; text-transform: uppercase;
+        padding: 3px 2px; border-radius: 2px; cursor: pointer;
+        border: 1px solid rgba(255,255,255,0.18); background: rgba(12,12,12,0.7);
+        color: rgba(255,255,255,0.8); transition: background 0.1s;
+        -webkit-tap-highlight-color: transparent; white-space: nowrap;
+      }
+      .ar-card-action-btn:hover { background: rgba(255,255,255,0.15); }
 
       .ar-vid-overlay {
         position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-        background: rgba(0,0,0,0.25); pointer-events: none;
+        background: rgba(0,0,0,0.3); pointer-events: none;
       }
-      .ar-vid-play { font-size: 22px; color: rgba(255,255,255,0.9); }
+      .ar-vid-play { font-size: 22px; color: rgba(255,255,255,0.85); }
 
       #ar-detail {
         border-top: 1px solid var(--ar-border); flex-shrink: 0;
@@ -208,16 +219,13 @@
       }
       #ar-detail.open { display: flex; }
 
-      #ar-detail-tabs {
-        display: flex; border-bottom: 1px solid var(--ar-border);
-      }
+      #ar-detail-tabs { display: flex; border-bottom: 1px solid var(--ar-border); }
       .ar-dtab {
         font-family: var(--ar-font); font-size: 10px; font-weight: 600;
         letter-spacing: 0.08em; text-transform: uppercase;
         padding: 6px 12px; cursor: pointer; border: none; background: none;
         color: var(--ar-fg3); border-bottom: 2px solid transparent;
-        transition: color 0.1s, border-color 0.1s;
-        -webkit-tap-highlight-color: transparent;
+        transition: color 0.1s, border-color 0.1s; -webkit-tap-highlight-color: transparent;
       }
       .ar-dtab.active { color: var(--ar-fg); border-bottom-color: var(--ar-fg); }
 
@@ -253,6 +261,7 @@
 
       #ar-debug-panel {
         padding: 8px 10px; display: none; flex-direction: column; gap: 6px;
+        border-bottom: 1px solid var(--ar-border); background: var(--ar-bg2);
       }
       #ar-debug-panel.open { display: flex; }
 
@@ -278,27 +287,28 @@
         background: var(--ar-fg3); transition: transform 0.15s, background 0.15s;
       }
       .ar-toggle.on { background: var(--ar-fg); border-color: var(--ar-fg); }
-      .ar-toggle.on::after { transform: translateX(12px); background: #fff; }
+      .ar-toggle.on::after { transform: translateX(12px); background: var(--ar-accent-inv); }
 
       .ar-log {
-        font-size: 9px; background: var(--ar-fg); color: #d0f0d0;
-        border-radius: 3px; padding: 6px 8px; max-height: 80px;
+        font-size: 9px; background: var(--ar-bg); color: #88cc88;
+        border: 1px solid var(--ar-border); border-radius: 3px;
+        padding: 6px 8px; max-height: 80px;
         overflow-y: auto; line-height: 1.7; white-space: pre-wrap; word-break: break-all;
       }
-      .ar-log-err { color: #ffaaaa; }
-      .ar-log-info { color: #aad4ff; }
+      .ar-log-err  { color: #e08888; }
+      .ar-log-info { color: #8899cc; }
 
       #ar-fab {
         position: fixed; bottom: 24px; right: 20px; z-index: 2147483646;
         width: 44px; height: 44px; border-radius: 10px;
-        background: #0a0a0a; border: 1px solid #333;
-        box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+        background: #f0f0f0; border: 1px solid #ccc;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.25);
         cursor: pointer; display: flex; align-items: center; justify-content: center;
         transition: transform 0.15s, box-shadow 0.15s;
         -webkit-tap-highlight-color: transparent; touch-action: manipulation;
         user-select: none; -webkit-user-select: none;
       }
-      #ar-fab:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.35); }
+      #ar-fab:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.3); }
       #ar-fab:active { transform: scale(0.93); }
       #ar-fab svg { width: 18px; height: 18px; }
 
@@ -320,6 +330,96 @@
         -webkit-tap-highlight-color: transparent; transition: all 0.1s;
       }
       .ar-selact:hover { background: var(--ar-fg); color: var(--ar-accent-inv); border-color: var(--ar-fg); }
+
+      /* ── Source Inspector Modal ── */
+      #ar-inspect-overlay {
+        display: none; position: fixed; inset: 0;
+        background: rgba(0,0,0,0.72); z-index: 2147483648;
+        align-items: center; justify-content: center; padding: 16px;
+      }
+      #ar-inspect-overlay.open { display: flex; }
+
+      #ar-inspect-modal {
+        width: 520px; max-width: 100%; max-height: 85vh;
+        background: var(--ar-bg); border: 1px solid var(--ar-border2);
+        border-radius: var(--ar-radius);
+        box-shadow: 0 16px 64px rgba(0,0,0,0.8);
+        display: flex; flex-direction: column; overflow: hidden;
+        animation: ar-modal-in 0.2s cubic-bezier(0.16,1,0.3,1);
+      }
+      @keyframes ar-modal-in {
+        from { opacity: 0; transform: scale(0.96) translateY(8px); }
+        to   { opacity: 1; transform: scale(1) translateY(0); }
+      }
+
+      #ar-inspect-header {
+        display: flex; align-items: center; gap: 8px;
+        padding: 8px 12px; background: var(--ar-fg); flex-shrink: 0;
+      }
+      #ar-inspect-header-title {
+        font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+        color: var(--ar-accent-inv); flex: 1;
+      }
+      .ar-inspect-close {
+        font-family: var(--ar-font); font-size: 13px;
+        background: none; border: none; color: rgba(0,0,0,0.6); cursor: pointer;
+        padding: 2px 6px; border-radius: 3px; transition: color 0.1s;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .ar-inspect-close:hover { color: rgba(0,0,0,0.9); }
+
+      #ar-inspect-preview {
+        background: var(--ar-bg3); flex-shrink: 0;
+        display: flex; align-items: center; justify-content: center;
+        min-height: 120px; max-height: 200px; overflow: hidden; position: relative;
+      }
+      #ar-inspect-preview img,
+      #ar-inspect-preview video {
+        max-width: 100%; max-height: 200px; object-fit: contain; display: block;
+      }
+      #ar-inspect-preview .ar-inspect-preview-placeholder {
+        font-size: 40px; opacity: 0.25;
+      }
+      #ar-inspect-preview-badge {
+        position: absolute; top: 8px; left: 8px;
+        font-size: 8px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+        padding: 2px 6px; border-radius: 2px;
+        background: rgba(12,12,12,0.85); color: var(--ar-fg);
+      }
+
+      #ar-inspect-body { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
+      #ar-inspect-body::-webkit-scrollbar { width: 4px; }
+      #ar-inspect-body::-webkit-scrollbar-thumb { background: var(--ar-border2); border-radius: 2px; }
+
+      .ar-inspect-section { display: flex; flex-direction: column; gap: 4px; }
+      .ar-inspect-section-title {
+        font-size: 9px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+        color: var(--ar-fg3); padding-bottom: 4px; border-bottom: 1px solid var(--ar-border);
+      }
+      .ar-inspect-row {
+        display: grid; grid-template-columns: 90px 1fr; gap: 6px; align-items: start;
+        font-size: 10px; line-height: 1.5;
+      }
+      .ar-inspect-key { color: var(--ar-fg3); }
+      .ar-inspect-val { color: var(--ar-fg2); word-break: break-all; }
+      .ar-inspect-val.mono { font-family: var(--ar-font); color: var(--ar-fg); }
+      .ar-inspect-val.dim  { color: var(--ar-fg3); font-style: italic; }
+
+      #ar-inspect-actions {
+        display: flex; flex-wrap: wrap; gap: 5px;
+        padding: 10px 12px; border-top: 1px solid var(--ar-border);
+        background: var(--ar-bg2); flex-shrink: 0;
+      }
+      .ar-inspect-action {
+        font-family: var(--ar-font); font-size: 10px; font-weight: 600;
+        letter-spacing: 0.06em; text-transform: uppercase;
+        padding: 4px 10px; border-radius: 3px; cursor: pointer;
+        border: 1px solid var(--ar-border2); background: var(--ar-bg); color: var(--ar-fg2);
+        transition: all 0.1s; -webkit-tap-highlight-color: transparent;
+      }
+      .ar-inspect-action:hover { border-color: var(--ar-fg); color: var(--ar-fg); }
+      .ar-inspect-action.primary { background: var(--ar-fg); color: var(--ar-accent-inv); border-color: var(--ar-fg); }
+      .ar-inspect-action.primary:hover { opacity: 0.88; }
     `;
     document.head.appendChild(el);
   }
@@ -352,44 +452,41 @@
 
   function scanPage() {
     const found = [];
-
-    const addUrl = (raw) => {
+    const addUrl = (raw, sourceEl) => {
       if (!raw) return;
       const url = absUrl(raw);
       if (!url) return;
       if (!MEDIA_EXT.test(url.split("?")[0])) return;
-      found.push({ url, type: typeOf(url) });
+      found.push({ url, type: typeOf(url), sourceEl: sourceEl || null });
     };
 
-    document.querySelectorAll("img[src]").forEach(el => addUrl(el.src));
-    document.querySelectorAll("img[data-src]").forEach(el => addUrl(el.dataset.src));
+    document.querySelectorAll("img[src]").forEach(el => addUrl(el.src, el));
+    document.querySelectorAll("img[data-src]").forEach(el => addUrl(el.dataset.src, el));
     document.querySelectorAll("img[srcset]").forEach(el => {
-      el.srcset.split(",").forEach(s => addUrl(s.trim().split(" ")[0]));
+      el.srcset.split(",").forEach(s => addUrl(s.trim().split(" ")[0], el));
     });
-    document.querySelectorAll("source[src]").forEach(el => addUrl(el.src));
+    document.querySelectorAll("source[src]").forEach(el => addUrl(el.src, el));
     document.querySelectorAll("source[srcset]").forEach(el => {
-      el.srcset.split(",").forEach(s => addUrl(s.trim().split(" ")[0]));
+      el.srcset.split(",").forEach(s => addUrl(s.trim().split(" ")[0], el));
     });
-    document.querySelectorAll("video[src]").forEach(el => addUrl(el.src));
-    document.querySelectorAll("video[poster]").forEach(el => addUrl(el.poster));
-    document.querySelectorAll("a[href]").forEach(el => {
-      if (MEDIA_EXT.test(el.href)) addUrl(el.href);
-    });
+    document.querySelectorAll("video[src]").forEach(el => addUrl(el.src, el));
+    document.querySelectorAll("video[poster]").forEach(el => addUrl(el.poster, el));
+    document.querySelectorAll("a[href]").forEach(el => { if (MEDIA_EXT.test(el.href)) addUrl(el.href, el); });
     document.querySelectorAll("[style]").forEach(el => {
       const m = el.style.backgroundImage?.match(/url\(["']?([^"')]+)["']?\)/);
-      if (m) addUrl(m[1]);
+      if (m) addUrl(m[1], el);
     });
 
     const rawHtml = document.documentElement.innerHTML;
     const urlRe = /https?:\/\/[^\s"'<>]+?\.(?:jpe?g|png|gif|webp|mp4|webm|mov)(\?[^"'\s<>]*)?/gi;
     let m;
-    while ((m = urlRe.exec(rawHtml)) !== null) addUrl(m[0]);
+    while ((m = urlRe.exec(rawHtml)) !== null) addUrl(m[0], null);
 
     return dedup(found);
   }
 
-  let allAssets = [];
-  let selected  = new Set();
+  let allAssets   = [];
+  let selected    = new Set();
   let activeFilter = S.filterState;
   let activeTab    = "urls";
   let focusedAsset = null;
@@ -406,7 +503,7 @@
       GM_xmlhttpRequest({
         method: "POST", url: S.webhookUrl,
         headers: { "Content-Type": "application/json" },
-        data: JSON.stringify({ embeds: [{ description: `\`\`\`\n${line}\n\`\`\``, color: type === "err" ? 0xff5555 : 0xaaaaff, footer: { text: "AssetRip Debug" } }] }),
+        data: JSON.stringify({ embeds: [{ description: `\`\`\`\n${line}\n\`\`\``, color: type === "err" ? 0xe05555 : 0x8899cc, footer: { text: "AssetRip Debug" } }] }),
       });
     }
   };
@@ -414,9 +511,7 @@
   function renderLog() {
     const el = document.getElementById("ar-log");
     if (!el) return;
-    el.innerHTML = logLines.slice(-20).map(l =>
-      `<span class="ar-log-${l.type}">${l.line}</span>`
-    ).join("\n");
+    el.innerHTML = logLines.slice(-20).map(l => `<span class="ar-log-${l.type}">${escHtml(l.line)}</span>`).join("\n");
     el.scrollTop = el.scrollHeight;
   }
 
@@ -457,6 +552,137 @@
     });
   }
 
+  function escHtml(s) {
+    return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+
+  function fileSizeStr(bytes) {
+    if (!bytes) return "unknown";
+    if (bytes < 1024) return bytes + " B";
+    if (bytes < 1048576) return (bytes / 1024).toFixed(1) + " KB";
+    return (bytes / 1048576).toFixed(2) + " MB";
+  }
+
+  /* ── Source Inspector ── */
+  function openInspector(asset) {
+    const overlay = document.getElementById("ar-inspect-overlay");
+    if (!overlay) return;
+
+    const url      = asset.url;
+    const type     = asset.type;
+    const srcEl    = asset.sourceEl;
+    const parsed   = (() => { try { return new URL(url); } catch { return null; } })();
+    const filename = parsed ? parsed.pathname.split("/").pop() : url.split("/").pop();
+    const ext      = filename.split(".").pop().toUpperCase();
+    const isVid    = type === "vid";
+
+    document.getElementById("ar-inspect-header-title").textContent = "Source Inspector";
+
+    const preview = document.getElementById("ar-inspect-preview");
+    preview.innerHTML = `<div class="ar-inspect-preview-placeholder">${isVid ? "🎬" : "🖼"}</div><div id="ar-inspect-preview-badge">${type}</div>`;
+
+    if (isVid) {
+      const v = document.createElement("video");
+      v.src = url; v.controls = true; v.preload = "metadata";
+      v.style.maxWidth = "100%"; v.style.maxHeight = "200px";
+      preview.replaceChild(v, preview.firstChild);
+    } else {
+      const img = document.createElement("img");
+      img.src = url;
+      img.onload = () => {
+        preview.replaceChild(img, preview.firstChild);
+        document.getElementById("ar-inspect-dim").textContent = `${img.naturalWidth} × ${img.naturalHeight}px`;
+      };
+      img.onerror = () => {};
+    }
+
+    let sourceTag = "—";
+    let sourceId  = "—";
+    let sourceCls = "—";
+    let sourceParent = "—";
+    let sourceAttr = "—";
+
+    if (srcEl) {
+      sourceTag    = srcEl.tagName.toLowerCase();
+      sourceId     = srcEl.id || "—";
+      sourceCls    = srcEl.className ? srcEl.className.trim().split(/\s+/).slice(0, 4).join(" ") : "—";
+      sourceParent = srcEl.parentElement ? srcEl.parentElement.tagName.toLowerCase() + (srcEl.parentElement.id ? `#${srcEl.parentElement.id}` : srcEl.parentElement.className ? `.${srcEl.parentElement.className.trim().split(/\s+/)[0]}` : "") : "—";
+      const attrMap = { img: "src", video: "src", source: "src", a: "href" };
+      sourceAttr   = attrMap[sourceTag] || "style/data";
+    }
+
+    const body = document.getElementById("ar-inspect-body");
+    body.innerHTML = `
+      <div class="ar-inspect-section">
+        <div class="ar-inspect-section-title">File</div>
+        <div class="ar-inspect-row"><span class="ar-inspect-key">filename</span><span class="ar-inspect-val mono">${escHtml(filename)}</span></div>
+        <div class="ar-inspect-row"><span class="ar-inspect-key">extension</span><span class="ar-inspect-val mono">${escHtml(ext)}</span></div>
+        <div class="ar-inspect-row"><span class="ar-inspect-key">type</span><span class="ar-inspect-val">${type}</span></div>
+        <div class="ar-inspect-row"><span class="ar-inspect-key">dimensions</span><span class="ar-inspect-val" id="ar-inspect-dim">${isVid ? "—" : "loading…"}</span></div>
+      </div>
+      <div class="ar-inspect-section">
+        <div class="ar-inspect-section-title">URL</div>
+        <div class="ar-inspect-row"><span class="ar-inspect-key">host</span><span class="ar-inspect-val mono">${escHtml(parsed?.hostname || "—")}</span></div>
+        <div class="ar-inspect-row"><span class="ar-inspect-key">path</span><span class="ar-inspect-val mono">${escHtml(parsed?.pathname || "—")}</span></div>
+        <div class="ar-inspect-row"><span class="ar-inspect-key">query</span><span class="ar-inspect-val mono ${parsed?.search ? "" : "dim"}">${escHtml(parsed?.search || "none")}</span></div>
+        <div class="ar-inspect-row"><span class="ar-inspect-key">protocol</span><span class="ar-inspect-val">${escHtml(parsed?.protocol || "—")}</span></div>
+        <div class="ar-inspect-row"><span class="ar-inspect-key">full url</span><span class="ar-inspect-val mono" style="font-size:9px">${escHtml(url)}</span></div>
+      </div>
+      <div class="ar-inspect-section">
+        <div class="ar-inspect-section-title">DOM Source</div>
+        <div class="ar-inspect-row"><span class="ar-inspect-key">element</span><span class="ar-inspect-val mono">${escHtml(sourceTag)}</span></div>
+        <div class="ar-inspect-row"><span class="ar-inspect-key">id</span><span class="ar-inspect-val mono ${sourceId === "—" ? "dim" : ""}">${escHtml(sourceId)}</span></div>
+        <div class="ar-inspect-row"><span class="ar-inspect-key">classes</span><span class="ar-inspect-val mono ${sourceCls === "—" ? "dim" : ""}" style="font-size:9px">${escHtml(sourceCls)}</span></div>
+        <div class="ar-inspect-row"><span class="ar-inspect-key">parent</span><span class="ar-inspect-val mono">${escHtml(sourceParent)}</span></div>
+        <div class="ar-inspect-row"><span class="ar-inspect-key">via attr</span><span class="ar-inspect-val mono">${escHtml(sourceAttr)}</span></div>
+      </div>
+      <div class="ar-inspect-section">
+        <div class="ar-inspect-section-title">Page Context</div>
+        <div class="ar-inspect-row"><span class="ar-inspect-key">page</span><span class="ar-inspect-val mono" style="font-size:9px">${escHtml(location.hostname)}</span></div>
+        <div class="ar-inspect-row"><span class="ar-inspect-key">referer</span><span class="ar-inspect-val mono" style="font-size:9px">${escHtml(location.href.slice(0, 80))}${location.href.length > 80 ? "…" : ""}</span></div>
+        <div class="ar-inspect-row"><span class="ar-inspect-key">cookies</span><span class="ar-inspect-val ${document.cookie ? "" : "dim"}">${document.cookie ? "present" : "none"}</span></div>
+      </div>
+    `;
+
+    const actions = document.getElementById("ar-inspect-actions");
+    actions.innerHTML = "";
+
+    const makeBtn = (label, cls, fn) => {
+      const b = document.createElement("button");
+      b.className = `ar-inspect-action${cls ? " " + cls : ""}`;
+      b.textContent = label;
+      b.addEventListener("click", fn);
+      actions.appendChild(b);
+    };
+
+    makeBtn("Copy URL", "primary", () => copyText(url, actions.querySelector(".primary")));
+    makeBtn("yt-dlp cmd", "", () => copyText(buildYtdlp(url), actions.lastChild));
+    makeBtn("ffmpeg cmd", "", () => copyText(buildFfmpeg(url), actions.lastChild));
+    makeBtn("Open", "", () => window.open(url, "_blank"));
+    if (srcEl) {
+      makeBtn("Scroll to element", "", () => {
+        closeInspector();
+        srcEl.scrollIntoView({ behavior: "smooth", block: "center" });
+        const orig = srcEl.style.outline;
+        srcEl.style.outline = "2px solid #f0f0f0";
+        setTimeout(() => { srcEl.style.outline = orig; }, 2000);
+      });
+    }
+    makeBtn("Select in grid", "", () => {
+      selected.add(url);
+      closeInspector();
+      renderGrid();
+      updateSelBar();
+    });
+
+    overlay.classList.add("open");
+    log(`Inspecting: ${filename} (${type}) from ${parsed?.hostname || "unknown"}`);
+  }
+
+  function closeInspector() {
+    document.getElementById("ar-inspect-overlay")?.classList.remove("open");
+  }
+
   function renderGrid() {
     const grid = document.getElementById("ar-grid");
     if (!grid) return;
@@ -468,26 +694,24 @@
       return;
     }
 
-    assets.forEach((asset, i) => {
+    assets.forEach((asset) => {
       const card = document.createElement("div");
       card.className = "ar-card" + (selected.has(asset.url) ? " selected" : "");
       card.dataset.url = asset.url;
 
       const isVid = asset.type === "vid";
-      let mediaHTML;
-
-      if (isVid) {
-        mediaHTML = `
-          <img class="ar-card-media loading" data-src="${asset.url}" alt="">
-          <div class="ar-vid-overlay"><span class="ar-vid-play">▶</span></div>`;
-      } else {
-        mediaHTML = `<img class="ar-card-media loading" data-src="${asset.url}" alt="">`;
-      }
+      const mediaHTML = isVid
+        ? `<img class="ar-card-media loading" data-src="${escHtml(asset.url)}" alt=""><div class="ar-vid-overlay"><span class="ar-vid-play">▶</span></div>`
+        : `<img class="ar-card-media loading" data-src="${escHtml(asset.url)}" alt="">`;
 
       card.innerHTML = `
         ${mediaHTML}
         <div class="ar-card-type">${asset.type}</div>
         <div class="ar-card-check">${selected.has(asset.url) ? "✓" : ""}</div>
+        <div class="ar-card-actions">
+          <button class="ar-card-action-btn ar-card-inspect">info</button>
+          <button class="ar-card-action-btn ar-card-open">open</button>
+        </div>
       `;
 
       const img = card.querySelector(".ar-card-media");
@@ -496,8 +720,14 @@
           entries.forEach(e => {
             if (e.isIntersecting) {
               img.src = img.dataset.src;
-              img.onload = () => img.classList.replace("loading", "loaded");
-              img.onerror = () => { img.style.display = "none"; card.querySelector(".ar-card-type").after(Object.assign(document.createElement("div"), { className: "ar-card-placeholder", textContent: isVid ? "🎬" : "🖼" })); };
+              img.onload  = () => img.classList.replace("loading", "loaded");
+              img.onerror = () => {
+                img.style.display = "none";
+                const ph = document.createElement("div");
+                ph.className = "ar-card-placeholder";
+                ph.textContent = isVid ? "🎬" : "🖼";
+                card.prepend(ph);
+              };
               obs.disconnect();
             }
           });
@@ -505,7 +735,17 @@
         io.observe(card);
       }
 
-      card.addEventListener("click", () => {
+      card.addEventListener("click", (e) => {
+        if (e.target.classList.contains("ar-card-inspect")) {
+          e.stopPropagation();
+          openInspector(asset);
+          return;
+        }
+        if (e.target.classList.contains("ar-card-open")) {
+          e.stopPropagation();
+          window.open(asset.url, "_blank");
+          return;
+        }
         const url = asset.url;
         if (selected.has(url)) selected.delete(url);
         else selected.add(url);
@@ -514,20 +754,12 @@
         updateSelBar();
       });
 
-      card.addEventListener("dblclick", (e) => {
-        e.preventDefault();
-        openDetail(asset);
-      });
+      card.addEventListener("dblclick", (e) => { e.preventDefault(); openInspector(asset); });
 
-      card.addEventListener("touchstart", (() => {
-        let t;
-        return () => { t = setTimeout(() => openDetail(asset), 500); };
-      })(), { passive: true });
-
-      card.addEventListener("touchend", (() => {
-        let t;
-        return () => clearTimeout(t);
-      })(), { passive: true });
+      let longPressTimer;
+      card.addEventListener("touchstart", () => { longPressTimer = setTimeout(() => openInspector(asset), 500); }, { passive: true });
+      card.addEventListener("touchend",   () => clearTimeout(longPressTimer), { passive: true });
+      card.addEventListener("touchmove",  () => clearTimeout(longPressTimer), { passive: true });
 
       grid.appendChild(card);
     });
@@ -559,43 +791,37 @@
     document.querySelectorAll(".ar-dpanel").forEach(p => p.classList.toggle("active", p.dataset.panel === tab));
 
     if (!focusedAsset) return;
-    const { url, type } = focusedAsset;
+    const { url } = focusedAsset;
 
     if (tab === "urls") {
       const p = document.getElementById("ar-panel-urls");
       const sel = selected.size > 0 ? [...selected] : [url];
-      p.innerHTML = sel.map(u => `<div class="ar-url-line">${u}</div>`).join("");
+      p.innerHTML = sel.map(u => `<div class="ar-url-line">${escHtml(u)}</div>`).join("");
     }
 
     if (tab === "ytdlp") {
       const p = document.getElementById("ar-panel-ytdlp");
       const sel = selected.size > 0 ? [...selected] : [url];
-      p.innerHTML = sel.map(u => {
+      p.innerHTML = sel.map((u, i) => {
         const cmd = buildYtdlp(u);
-        return `<div class="ar-cmd-label">yt-dlp</div>
-          <div class="ar-cmd">${escHtml(cmd)}<button class="ar-copy-btn" onclick="event.stopPropagation()">copy</button></div>`;
+        return `<div class="ar-cmd-label">yt-dlp</div><div class="ar-cmd">${escHtml(cmd)}<button class="ar-copy-btn">copy</button></div>`;
       }).join("");
       p.querySelectorAll(".ar-copy-btn").forEach((btn, i) => {
-        btn.addEventListener("click", () => copyText(buildYtdlp(sel[i] ?? url), btn));
+        btn.addEventListener("click", () => copyText(buildYtdlp((selected.size > 0 ? [...selected] : [url])[i] ?? url), btn));
       });
     }
 
     if (tab === "ffmpeg") {
       const p = document.getElementById("ar-panel-ffmpeg");
       const sel = selected.size > 0 ? [...selected] : [url];
-      p.innerHTML = sel.map(u => {
+      p.innerHTML = sel.map((u) => {
         const cmd = buildFfmpeg(u);
-        return `<div class="ar-cmd-label">ffmpeg</div>
-          <div class="ar-cmd">${escHtml(cmd)}<button class="ar-copy-btn" onclick="event.stopPropagation()">copy</button></div>`;
+        return `<div class="ar-cmd-label">ffmpeg</div><div class="ar-cmd">${escHtml(cmd)}<button class="ar-copy-btn">copy</button></div>`;
       }).join("");
       p.querySelectorAll(".ar-copy-btn").forEach((btn, i) => {
-        btn.addEventListener("click", () => copyText(buildFfmpeg(sel[i] ?? url), btn));
+        btn.addEventListener("click", () => copyText(buildFfmpeg((selected.size > 0 ? [...selected] : [url])[i] ?? url), btn));
       });
     }
-  }
-
-  function escHtml(s) {
-    return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
   }
 
   function buildGUI() {
@@ -666,23 +892,42 @@
 
     document.body.appendChild(root);
 
+    const inspectOverlay = document.createElement("div");
+    inspectOverlay.id = "ar-inspect-overlay";
+    inspectOverlay.innerHTML = `
+      <div id="ar-inspect-modal">
+        <div id="ar-inspect-header">
+          <span id="ar-inspect-header-title">Source Inspector</span>
+          <button class="ar-inspect-close" id="ar-inspect-close-btn">✕</button>
+        </div>
+        <div id="ar-inspect-preview">
+          <div class="ar-inspect-preview-placeholder">⬡</div>
+          <div id="ar-inspect-preview-badge">—</div>
+        </div>
+        <div id="ar-inspect-body"></div>
+        <div id="ar-inspect-actions"></div>
+      </div>
+    `;
+    document.body.appendChild(inspectOverlay);
+
+    inspectOverlay.addEventListener("click", (e) => { if (e.target === inspectOverlay) closeInspector(); });
+    document.getElementById("ar-inspect-close-btn").addEventListener("click", closeInspector);
+
     document.getElementById("ar-close-btn").addEventListener("click", () => {
-      guiVisible = false;
-      root.classList.add("ar-hidden");
+      guiVisible = false; root.classList.add("ar-hidden");
     });
 
     document.getElementById("ar-scan-btn").addEventListener("click", () => {
       const bar = document.getElementById("ar-scan-bar");
       const fill = document.getElementById("ar-scan-fill");
-      bar.style.display = "block";
-      fill.style.width = "30%";
+      bar.style.display = "block"; fill.style.width = "30%";
       setTimeout(() => { fill.style.width = "70%"; }, 120);
       setTimeout(() => {
         allAssets = scanPage();
         fill.style.width = "100%";
         setTimeout(() => { bar.style.display = "none"; fill.style.width = "0%"; }, 300);
-        document.getElementById("ar-dedup-info").textContent = `(deduped)`;
-        log(`Scan complete: ${allAssets.length} assets found on ${location.hostname}`);
+        document.getElementById("ar-dedup-info").textContent = "(deduped)";
+        log(`Scan: ${allAssets.length} assets on ${location.hostname}`);
         renderGrid();
       }, 200);
     });
@@ -694,55 +939,44 @@
     });
 
     document.getElementById("ar-webhook-input").addEventListener("input", e => {
-      S.webhookUrl = e.target.value.trim();
-      GM_setValue("webhookUrl", S.webhookUrl);
+      S.webhookUrl = e.target.value.trim(); GM_setValue("webhookUrl", S.webhookUrl);
     });
 
     document.getElementById("ar-debug-toggle").addEventListener("click", () => {
-      S.debugMode = !S.debugMode;
-      GM_setValue("debugMode", S.debugMode);
+      S.debugMode = !S.debugMode; GM_setValue("debugMode", S.debugMode);
       document.getElementById("ar-debug-toggle").classList.toggle("on", S.debugMode);
     });
 
     document.querySelectorAll(".ar-filter-btn").forEach(btn => {
       btn.addEventListener("click", () => {
-        activeFilter = btn.dataset.filter;
-        GM_setValue("filterState", activeFilter);
+        activeFilter = btn.dataset.filter; GM_setValue("filterState", activeFilter);
         document.querySelectorAll(".ar-filter-btn").forEach(b => b.classList.toggle("active", b.dataset.filter === activeFilter));
         renderGrid();
       });
     });
 
     document.getElementById("ar-sel-all").addEventListener("click", () => {
-      filteredAssets().forEach(a => selected.add(a.url));
-      renderGrid(); updateSelBar();
+      filteredAssets().forEach(a => selected.add(a.url)); renderGrid(); updateSelBar();
     });
-
     document.getElementById("ar-sel-none").addEventListener("click", () => {
       selected.clear(); renderGrid(); updateSelBar();
     });
-
     document.getElementById("ar-clear-btn").addEventListener("click", () => {
-      allAssets = []; selected.clear();
-      renderGrid(); updateSelBar();
+      allAssets = []; selected.clear(); renderGrid(); updateSelBar();
       document.getElementById("ar-detail").classList.remove("open");
       document.getElementById("ar-dedup-info").textContent = "";
     });
 
     document.querySelectorAll(".ar-dtab").forEach(tab => {
       tab.addEventListener("click", () => {
-        if (tab.id === "ar-detail-close") {
-          document.getElementById("ar-detail").classList.remove("open");
-        } else {
-          renderDetailTab(tab.dataset.tab);
-        }
+        if (tab.id === "ar-detail-close") document.getElementById("ar-detail").classList.remove("open");
+        else renderDetailTab(tab.dataset.tab);
       });
     });
 
     document.getElementById("ar-copy-urls-btn").addEventListener("click", () => {
-      const urls = [...selected].join("\n");
       const btn = document.getElementById("ar-copy-urls-btn");
-      copyText(urls, btn);
+      copyText([...selected].join("\n"), btn);
       log(`Copied ${selected.size} URLs`);
     });
 
@@ -754,33 +988,27 @@
     });
 
     makeDraggable(root, document.getElementById("ar-titlebar"));
-
     renderLog();
   }
 
   function makeDraggable(el, handle) {
-    let ox = 0, oy = 0, startX, startY, dragging = false;
-
+    let ox = 0, oy = 0, dragging = false;
     const onDown = (cx, cy) => {
       dragging = true;
-      const r = el.getBoundingClientRect();
-      ox = cx - r.left; oy = cy - r.top;
+      const r = el.getBoundingClientRect(); ox = cx - r.left; oy = cy - r.top;
       el.style.transition = "none";
     };
     const onMove = (cx, cy) => {
       if (!dragging) return;
-      let nx = cx - ox, ny = cy - oy;
-      nx = Math.max(0, Math.min(nx, window.innerWidth  - el.offsetWidth));
-      ny = Math.max(0, Math.min(ny, window.innerHeight - el.offsetHeight));
-      el.style.left = nx + "px"; el.style.top = ny + "px";
-      el.style.right = "auto"; el.style.bottom = "auto";
+      let nx = Math.max(0, Math.min(cx - ox, window.innerWidth  - el.offsetWidth));
+      let ny = Math.max(0, Math.min(cy - oy, window.innerHeight - el.offsetHeight));
+      el.style.left = nx + "px"; el.style.top = ny + "px"; el.style.right = "auto"; el.style.bottom = "auto";
     };
     const onUp = () => { dragging = false; el.style.transition = ""; };
 
-    handle.addEventListener("mousedown", e => { onDown(e.clientX, e.clientY); });
+    handle.addEventListener("mousedown", e => onDown(e.clientX, e.clientY));
     document.addEventListener("mousemove", e => onMove(e.clientX, e.clientY));
     document.addEventListener("mouseup", onUp);
-
     handle.addEventListener("touchstart", e => { const t = e.touches[0]; onDown(t.clientX, t.clientY); }, { passive: true });
     document.addEventListener("touchmove", e => { const t = e.touches[0]; onMove(t.clientX, t.clientY); }, { passive: true });
     document.addEventListener("touchend", onUp, { passive: true });
@@ -789,10 +1017,8 @@
   function buildFAB() {
     if (document.getElementById("ar-fab")) return;
     const fab = document.createElement("button");
-    fab.id = "ar-fab";
-    fab.title = "AssetRip";
-    fab.setAttribute("aria-label", "Toggle AssetRip");
-    fab.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    fab.id = "ar-fab"; fab.title = "AssetRip"; fab.setAttribute("aria-label", "Toggle AssetRip");
+    fab.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="#0c0c0c" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
       <rect x="3" y="3" width="18" height="18" rx="2"/>
       <circle cx="8.5" cy="8.5" r="1.5"/>
       <polyline points="21 15 16 10 5 21"/>
